@@ -11,9 +11,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +25,7 @@ import android.view.ViewGroup;
 
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,10 +46,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.normal.TedPermission;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
+import gun0912.tedbottompicker.TedBottomPicker;
 import io.paperdb.Paper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -63,6 +72,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     FloatingActionButton fab;
     TextView nameUser;
     FirebaseAuth fAuth;
+    ImageView imagepicker;
     public static String categorID;
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -87,7 +97,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         nameUser = (TextView)hView.findViewById(R.id.name_User);
         fAuth = FirebaseAuth.getInstance();
         FirebaseUser user = fAuth.getCurrentUser();
-
+        //imagepicker = findViewById(R.id.imageViewCreateCata);
         String[] name =user.getEmail().split("@");
         nameUser.setText(name[0]);
 
@@ -122,6 +132,47 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         loadMenu2();
     }
+
+//    private void requestPermission(){
+//        PermissionListener permissionlistener = new PermissionListener() {
+//            @Override
+//            public void onPermissionGranted() {
+//                Toast.makeText(HomeActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
+//                openImagePicker();
+//            }
+//
+//            @Override
+//            public void onPermissionDenied(List<String> deniedPermissions) {
+//                Toast.makeText(HomeActivity.this, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+//            }
+//        };
+//        TedPermission.create()
+//                .setPermissionListener(permissionlistener)
+//                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+//                .setPermissions(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                .check();
+//    }
+//
+//    private void openImagePicker(){
+//        TedBottomPicker.OnImageSelectedListener imageSelectedListener = new TedBottomPicker.OnImageSelectedListener(){
+//
+//            @Override
+//            public void onImageSelected(Uri uri) {
+//                try {
+//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+//                    imagepicker.setImageBitmap(bitmap);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//        TedBottomPicker tedBottomPicker = new TedBottomPicker.Builder(HomeActivity.this)
+//                .setOnImageSelectedListener(imageSelectedListener)
+//                .create();
+//        tedBottomPicker.show(getSupportFragmentManager());
+//
+//    }
+
 
     public void LoadMenu(String loginID){
 

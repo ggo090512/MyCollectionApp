@@ -166,6 +166,9 @@ public class CreateActivity extends AppCompatActivity {
         });
 
     }
+
+
+
     private void camOpen() {
         if (ContextCompat.checkSelfPermission(CreateActivity.this,
                 Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){

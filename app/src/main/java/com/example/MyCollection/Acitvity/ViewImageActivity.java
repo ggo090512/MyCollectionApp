@@ -1,8 +1,12 @@
 package com.example.MyCollection.Acitvity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -20,9 +24,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.normal.TedPermission;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import gun0912.tedbottompicker.TedBottomPicker;
 
 public class ViewImageActivity extends Activity {
     static int pos;
@@ -32,6 +41,7 @@ public class ViewImageActivity extends Activity {
     private ImageAdapter imageAdapter;
     private ArrayList<ImageItem> imagesList;
     private ImageView imageView;
+    ImageView imagepicker;
     private ProgressBar progressBar;
     private List<ImageItem> pagerMList = new ArrayList<>();
     String categoryId = "";
