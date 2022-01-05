@@ -77,8 +77,7 @@ public class CreateActivity extends AppCompatActivity {
         btnCam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent open_cam = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(open_cam, REQUEST_CODE_CAMERA);
+                camOpen();
             }
         });
         //Nút hiện bottom sheet view
@@ -91,6 +90,8 @@ public class CreateActivity extends AppCompatActivity {
 
     }
 
+
+    //Phương thức show bottom sheet
     private void Show(){
         bottomSheetDialog = new BottomSheetDialog(
                 CreateActivity.this, R.style.BottomSheetDialogTheme
@@ -154,6 +155,7 @@ public class CreateActivity extends AppCompatActivity {
         bottomSheetDialog.show();
     }
 
+    //
     private void camOpen() {
         if (ContextCompat.checkSelfPermission(CreateActivity.this,
                 Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){

@@ -57,13 +57,13 @@ public class CreateCategoryActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
     BottomSheetDialog bottomSheetDialog;
     List<String> list;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReference();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_category);
         fAuth = FirebaseAuth.getInstance();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         camOpen();
 
@@ -76,73 +76,76 @@ public class CreateCategoryActivity extends AppCompatActivity {
         }
 
         btnCategory.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-
-                bottomSheetDialog = new BottomSheetDialog(
-                        CreateCategoryActivity.this, R.style.BottomSheetDialogTheme
-                );
-                View bottomSheetView = LayoutInflater.from(getApplicationContext())
-                        .inflate(
-                                R.layout.layout_cataloge_sheet,
-                                findViewById(R.id.bottomSheetContainerCataloge)
-                        );
-
-                txtNameCategory = bottomSheetView.findViewById(R.id.edit_Cataname);
-                list = new ArrayList<>();
-                bottomSheetView.findViewById(R.id.btnSaveCata).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Calendar calendar = Calendar.getInstance();
-                        StorageReference mountainsRef = storageRef.child("img"+calendar.getTimeInMillis()+".png");
-
-                        imageView.setDrawingCacheEnabled(true);
-                        imageView.buildDrawingCache();
-                        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                        byte[] data = baos.toByteArray();
-
-                        UploadTask uploadTask = mountainsRef.putBytes(data);
-                        uploadTask.addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                Toast.makeText(getApplicationContext(),stringNoitce.ERROR,Toast.LENGTH_LONG).show();
-                            }
-                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                                result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        String photoStringLink = uri.toString();
-                                        fAuth = FirebaseAuth.getInstance();
-                                        FirebaseUser user = fAuth.getCurrentUser();
-                                        databaseReference.child(Container.CATEGORY).push().setValue( new Category(txtNameCategory.getText().toString(),photoStringLink,user.getEmail()), new DatabaseReference.CompletionListener() {
-                                            @Override
-                                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                                if(error == null){
-                                                    Toast.makeText(getApplicationContext(),stringNoitce.SUCCESS,Toast.LENGTH_LONG).show();
-                                                }else {
-                                                    Toast.makeText(getApplicationContext(),stringNoitce.ERROR,Toast.LENGTH_LONG).show();
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                                bottomSheetDialog.dismiss();
-                            }
-                        });
-
-                    }
-                });
-                bottomSheetDialog.setContentView(bottomSheetView);
-                bottomSheetDialog.show();
+                Show();
             }
         });
     }
+
+    private void Show(){
+        bottomSheetDialog = new BottomSheetDialog(
+                CreateCategoryActivity.this, R.style.BottomSheetDialogTheme
+        );
+        View bottomSheetView = LayoutInflater.from(getApplicationContext())
+                .inflate(
+                        R.layout.layout_cataloge_sheet,
+                        findViewById(R.id.bottomSheetContainerCataloge)
+                );
+
+        txtNameCategory = bottomSheetView.findViewById(R.id.edit_Cataname);
+        list = new ArrayList<>();
+        bottomSheetView.findViewById(R.id.btnSaveCata).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                StorageReference mountainsRef = storageRef.child("img"+calendar.getTimeInMillis()+".png");
+
+                imageView.setDrawingCacheEnabled(true);
+                imageView.buildDrawingCache();
+                Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                byte[] data = baos.toByteArray();
+
+                UploadTask uploadTask = mountainsRef.putBytes(data);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getApplicationContext(),stringNoitce.ERROR,Toast.LENGTH_LONG).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String photoStringLink = uri.toString();
+                                fAuth = FirebaseAuth.getInstance();
+                                FirebaseUser user = fAuth.getCurrentUser();
+                                databaseReference.child(Container.CATEGORY).push().setValue( new Category(txtNameCategory.getText().toString(),photoStringLink,user.getEmail()), new DatabaseReference.CompletionListener() {
+                                    @Override
+                                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                        if(error == null){
+                                            Toast.makeText(getApplicationContext(),stringNoitce.SUCCESS,Toast.LENGTH_LONG).show();
+                                        }else {
+                                            Toast.makeText(getApplicationContext(),stringNoitce.ERROR,Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+
+            }
+        });
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
+    }
+
 
     private void camOpen() {
         Intent open_cam = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

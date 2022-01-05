@@ -20,9 +20,9 @@
     <application
         android:allowBackup="true"
         android:fullBackupContent="false"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@mipmap/gallery"
+        android:label="My Collection"
+        android:roundIcon="@mipmap/gallery"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="m">
