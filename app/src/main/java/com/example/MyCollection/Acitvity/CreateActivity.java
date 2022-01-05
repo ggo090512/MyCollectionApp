@@ -65,6 +65,7 @@ public class CreateActivity extends AppCompatActivity {
 
         UIinit();
         camOpen();
+        Show();
 
 
         if (ContextCompat.checkSelfPermission(CreateActivity.this,
@@ -84,90 +85,74 @@ public class CreateActivity extends AppCompatActivity {
         btnShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bottomSheetDialog = new BottomSheetDialog(
-                        CreateActivity.this, R.style.BottomSheetDialogTheme
-                );
-                View bottomSheetView = LayoutInflater.from(getApplicationContext())
-                        .inflate(
-                                R.layout.layout_background_sheet,
-                                findViewById(R.id.bottomSheetContainer)
-                        );
-
-                name = bottomSheetView.findViewById(R.id.edit_name);
-                address = bottomSheetView.findViewById(R.id.edit_address);
-                list = new ArrayList<>();
-
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                String strEmail = user.getEmail();
-
-                //Lấy dữ liệu cataloge dựa vào email
-//                databaseRef = FirebaseDatabase.getInstance().getReference("Cataloge");
-//                Query query = databaseRef.orderByChild("mEmail").equalTo(strEmail);
-//                query.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-//                            String spinnerName = dataSnapshot.child("mName").getValue(String.class);
-//                            list.add(spinnerName);
-//                        }
-//                        arrayAdapter = new ArrayAdapter<>(CreateActivity.this, android.R.layout.simple_spinner_item, list);
-//                        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                        cataloge.setAdapter(arrayAdapter);
-//                    }
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {}
-//                });
-
-                //Nút save
-                bottomSheetView.findViewById(R.id.btnSave).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        databaseRef = FirebaseDatabase.getInstance().getReference("Images");
-                        Calendar calendar = Calendar.getInstance();
-
-                        StorageReference mountainsRef = storageRef.child("image" + calendar.getTimeInMillis()+".png");
-                        image.setDrawingCacheEnabled(true);
-                        image.buildDrawingCache();
-                        Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                        byte[] data = baos.toByteArray();
-                        UploadTask uploadTask = mountainsRef.putBytes(data);
-
-                        uploadTask.addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Handle unsuccessful uploads
-                                Toast.makeText(CreateActivity.this, "Fail", Toast.LENGTH_LONG).show();
-                            }
-                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                                result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        String img = uri.toString();
-                                        categoryId = HomeActivity.categorID;
-                                        ImageItem image = new ImageItem(categoryId,name.getText().toString().trim(),address.getText().toString().trim(),user.getEmail(),img);
-                                        String imageId = databaseRef.push().getKey();
-                                        databaseRef.child(imageId).setValue(image);
-                                        Toast.makeText(CreateActivity.this, "Success", Toast.LENGTH_LONG).show();
-                                        bottomSheetDialog.dismiss();
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-                bottomSheetDialog.setContentView(bottomSheetView);
-                bottomSheetDialog.show();
+                Show();
             }
         });
 
     }
 
+    private void Show(){
+        bottomSheetDialog = new BottomSheetDialog(
+                CreateActivity.this, R.style.BottomSheetDialogTheme
+        );
+        View bottomSheetView = LayoutInflater.from(getApplicationContext())
+                .inflate(
+                        R.layout.layout_background_sheet,
+                        findViewById(R.id.bottomSheetContainer)
+                );
 
+        name = bottomSheetView.findViewById(R.id.edit_name);
+        address = bottomSheetView.findViewById(R.id.edit_address);
+        list = new ArrayList<>();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String strEmail = user.getEmail();
+
+        //Nút save
+        bottomSheetView.findViewById(R.id.btnSave).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                databaseRef = FirebaseDatabase.getInstance().getReference("Images");
+                Calendar calendar = Calendar.getInstance();
+
+                StorageReference mountainsRef = storageRef.child("image" + calendar.getTimeInMillis()+".png");
+                image.setDrawingCacheEnabled(true);
+                image.buildDrawingCache();
+                Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                byte[] data = baos.toByteArray();
+                UploadTask uploadTask = mountainsRef.putBytes(data);
+
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        Toast.makeText(CreateActivity.this, "Fail", Toast.LENGTH_LONG).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String img = uri.toString();
+                                categoryId = HomeActivity.categorID;
+                                ImageItem image = new ImageItem(categoryId,name.getText().toString().trim(),address.getText().toString().trim(),user.getEmail(),img);
+                                String imageId = databaseRef.push().getKey();
+                                databaseRef.child(imageId).setValue(image);
+                                Toast.makeText(CreateActivity.this, "Success", Toast.LENGTH_LONG).show();
+                                bottomSheetDialog.dismiss();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
+    }
 
     private void camOpen() {
         if (ContextCompat.checkSelfPermission(CreateActivity.this,
