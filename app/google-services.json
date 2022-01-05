@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "73694305788",
+    "firebase_url": "https://foodnews-ea4e2-default-rtdb.firebaseio.com",
+    "project_id": "foodnews-ea4e2",
+    "storage_bucket": "foodnews-ea4e2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73694305788:android:aa784f2d13933163a12679",
+        "android_client_info": {
+          "package_name": "com.example.foodnews"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73694305788-pb913cmbj3sj54jdcg317emf1hbb69se.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3JR6YTLtWK9bXQbYxjruFTPM6XZHCLIw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "73694305788-pb913cmbj3sj54jdcg317emf1hbb69se.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73694305788:android:0cca2c016a77e905a12679",
+        "android_client_info": {
+          "package_name": "com.example.foodnewss"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73694305788-pb913cmbj3sj54jdcg317emf1hbb69se.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3JR6YTLtWK9bXQbYxjruFTPM6XZHCLIw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "73694305788-pb913cmbj3sj54jdcg317emf1hbb69se.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
