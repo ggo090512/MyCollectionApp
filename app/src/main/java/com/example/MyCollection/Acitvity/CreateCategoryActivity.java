@@ -66,6 +66,7 @@ public class CreateCategoryActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         camOpen();
+        Show();
 
         btnCategory = findViewById(R.id.btnCreateCategory);
         imageView = findViewById(R.id.imageViewCreateCata);

@@ -1,6 +1,7 @@
 package com.example.MyCollection.Acitvity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -8,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -33,14 +35,20 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.core.Context;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.normal.TedPermission;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import gun0912.tedbottompicker.TedBottomPicker;
 
 public class CreateActivity extends AppCompatActivity {
     FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -64,8 +72,9 @@ public class CreateActivity extends AppCompatActivity {
         setContentView(R.layout.create_main);
 
         UIinit();
-        camOpen();
-        Show();
+        //camOpen();
+        requestPermission();
+
 
 
         if (ContextCompat.checkSelfPermission(CreateActivity.this,
@@ -77,14 +86,7 @@ public class CreateActivity extends AppCompatActivity {
         btnCam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                camOpen();
-            }
-        });
-        //Nút hiện bottom sheet view
-        btnShow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Show();
+                requestPermission();
             }
         });
 
@@ -93,6 +95,7 @@ public class CreateActivity extends AppCompatActivity {
 
     //Phương thức show bottom sheet
     private void Show(){
+        Activity context = CreateActivity.this;
         bottomSheetDialog = new BottomSheetDialog(
                 CreateActivity.this, R.style.BottomSheetDialogTheme
         );
@@ -145,6 +148,9 @@ public class CreateActivity extends AppCompatActivity {
                                 databaseRef.child(imageId).setValue(image);
                                 Toast.makeText(CreateActivity.this, "Success", Toast.LENGTH_LONG).show();
                                 bottomSheetDialog.dismiss();
+                                Intent toCreate = new Intent(context, ViewImageActivity.class);
+                                startActivity(toCreate);
+                                context.finish();
                             }
                         });
                     }
@@ -178,7 +184,48 @@ public class CreateActivity extends AppCompatActivity {
 
     private void UIinit(){
         btnCam = findViewById(R.id.btnCam);
-        btnShow = findViewById(R.id.btnCreate);
+//        btnShow = findViewById(R.id.btnCreate);
         image = findViewById(R.id.imageViewCreate);
+    }
+
+
+    private void requestPermission(){
+        PermissionListener permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                Toast.makeText(CreateActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                openImagePicker();
+            }
+
+            @Override
+            public void onPermissionDenied(List<String> deniedPermissions) {
+                Toast.makeText(CreateActivity.this, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+            }
+        };
+        TedPermission.create()
+                .setPermissionListener(permissionlistener)
+                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+                .setPermissions(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .check();
+    }
+
+    private void openImagePicker(){
+        TedBottomPicker.OnImageSelectedListener imageSelectedListener = new TedBottomPicker.OnImageSelectedListener(){
+
+            @Override
+            public void onImageSelected(Uri uri) {
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                    image.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        TedBottomPicker tedBottomPicker = new TedBottomPicker.Builder(CreateActivity.this)
+                .setOnImageSelectedListener(imageSelectedListener)
+                .create();
+        tedBottomPicker.show(getSupportFragmentManager());
+        Show();
     }
 }

@@ -3,6 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android/FoodNew-main/MyCollectionApp/app/src/main/res/layout/activity_image_category.xml" value="0.13020833333333334" />
+        <entry key="..\:/Android/FoodNew-main/MyCollectionApp/app/src/main/res/layout/activity_login.xml" value="0.13020833333333334" />
+        <entry key="..\:/Android/FoodNew-main/MyCollectionApp/app/src/main/res/layout/activity_viewimage.xml" value="0.13020833333333334" />
+        <entry key="..\:/Android/FoodNew-main/MyCollectionApp/app/src/main/res/layout/create_main.xml" value="0.13020833333333334" />
+        <entry key="..\:/Android/FoodNew-main/MyCollectionApp/app/src/main/res/layout/item_container_image.xml" value="0.25416666666666665" />
         <entry key="..\:/Android/FoodNew-main/app/src/main/res/drawable/button_background.xml" value="0.2703125" />
         <entry key="..\:/Android/FoodNew-main/app/src/main/res/layout/activity_home.xml" value="0.25416666666666665" />
         <entry key="..\:/Android/FoodNew-main/app/src/main/res/layout/activity_image_category.xml" value="0.1265625" />

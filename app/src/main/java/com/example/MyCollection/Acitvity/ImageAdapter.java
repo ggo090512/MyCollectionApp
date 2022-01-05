@@ -41,7 +41,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         //ImageView
         Glide.with(mContext)
                 .load(imagesList.get(position).getmImage())
-                .placeholder(R.mipmap.ic_launcher)
                 .into(holder.imageView);
     }
 

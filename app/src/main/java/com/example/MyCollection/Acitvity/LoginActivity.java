@@ -3,6 +3,7 @@ package com.example.MyCollection.Acitvity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView LogoName,slogan_name;
     TextInputLayout txtEmail,txtPassword;
     FirebaseAuth fAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         btnSignup.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this,SignUpActivity.class);
@@ -101,6 +102,10 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent, options.toBundle());
             }
         });
-
+    }
+    @Override
+    public void onBackPressed() {
+        Activity context = LoginActivity.this;
+        context.finish();
     }
 }

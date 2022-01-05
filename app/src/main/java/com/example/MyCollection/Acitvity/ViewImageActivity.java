@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -62,10 +63,13 @@ public class ViewImageActivity extends Activity {
         clearAll();
         //GetDataFromFirebase();
 
-        if (getIntent() != null)
-            categoryId = getIntent().getStringExtra("CategoryId");
-        if (!categoryId.isEmpty() && categoryId != null){
-            GetDataFromFirebase(categoryId);
+
+        if (getIntent() != null) {
+            categoryId = HomeActivity.categorID;
+            Log.d("view", categoryId+"");
+            if (categoryId != null) {
+                GetDataFromFirebase(categoryId);
+            }
         }
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -75,11 +79,13 @@ public class ViewImageActivity extends Activity {
                 Intent itemIntent = new Intent(ViewImageActivity.this, CreateActivity.class);
 //                itemIntent.putExtra("CategoryId", categoryId);
                 startActivity(itemIntent);
+                Activity context = ViewImageActivity.this;
+                context.finish();
             }
         });
     }
 
-    private void GetDataFromFirebase(String categoryId){
+    private void GetDataFromFirebase(String categoryId) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         dbRef = database.getReference("Images");
         Query query = dbRef.orderByChild("mCate").equalTo(categoryId);
@@ -106,6 +112,7 @@ public class ViewImageActivity extends Activity {
                     }
                 });
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(ViewImageActivity.this, "NO IMAGE", Toast.LENGTH_LONG).show();
@@ -113,11 +120,12 @@ public class ViewImageActivity extends Activity {
             }
         });
     }
-    private void clearAll(){
-        if (imagesList != null){
+
+    private void clearAll() {
+        if (imagesList != null) {
             imagesList.clear();
 
-            if (imageAdapter != null){
+            if (imageAdapter != null) {
                 imageAdapter.notifyDataSetChanged();
             }
         }

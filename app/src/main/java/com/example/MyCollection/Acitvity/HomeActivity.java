@@ -12,11 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -210,16 +212,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 MenuViewHolder.setOnClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
-                        Toast.makeText(HomeActivity.this, ""+ adapter.getRef(position).getKey() ,Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(HomeActivity.this, ""+ adapter.getRef(position).getKey() ,Toast.LENGTH_SHORT).show();
 
                         Intent foodIntent = new Intent(HomeActivity.this, ViewImageActivity.class);
                         foodIntent.putExtra("CategoryId", adapter.getRef(position).getKey());
                         categorID = adapter.getRef(position).getKey();
                         startActivity(foodIntent);
+                        //categoryId = getIntent().getStringExtra("CategoryId");
+                        Log.d("home", categorID+"");
                     }
                 });
             }
-
             @NonNull
             @Override
             public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -246,7 +249,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }else {
             super.onBackPressed();
         }
-
+        Activity context = HomeActivity.this;
+        context.finish();
     }
 
     @Override
