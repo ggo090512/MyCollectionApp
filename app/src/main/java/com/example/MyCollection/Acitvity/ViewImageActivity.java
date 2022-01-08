@@ -1,12 +1,8 @@
 package com.example.MyCollection.Acitvity;
-
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
+
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -18,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.MyCollection.Models.ImageItem;
+import com.example.MyCollection.Track.MapsActivity;
 import com.example.foodnews.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,10 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.normal.TedPermission;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +50,7 @@ public class ViewImageActivity extends Activity {
         viewPager2 = findViewById(R.id.image);
         btnAdd = findViewById(R.id.btn_add);
         progressBar = findViewById(R.id.progress_circle);
-
+        btnMap = findViewById(R.id.btn_map);
         imagesList = new ArrayList<>();
         dbRef = FirebaseDatabase.getInstance().getReference();
         imagesList = new ArrayList<>();
@@ -66,7 +60,7 @@ public class ViewImageActivity extends Activity {
 
         if (getIntent() != null) {
             categoryId = HomeActivity.categorID;
-            Log.d("view", categoryId+"");
+            Log.d("view", categoryId + "");
             if (categoryId != null) {
                 GetDataFromFirebase(categoryId);
             }
@@ -83,7 +77,34 @@ public class ViewImageActivity extends Activity {
                 context.finish();
             }
         });
+        viewPager2.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                return false;
+            }
+        });
+
+        ;
+        btnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int index = viewPager2.getCurrentItem();
+                Log.e("index", viewPager2.getCurrentItem() + "");
+                Log.e("pos", "onPageSelected: " + index);
+                Log.e("temp", imagesList.get(index).getLat() + "");
+                String latTemp = imagesList.get(index).getLat();
+                String lonTemp = imagesList.get(index).getLon();
+                Intent toTrack = new Intent(ViewImageActivity.this, MapsActivity.class);
+                Log.e("check Cord", "" + latTemp + " " + lonTemp);
+                toTrack.putExtra("latDes", latTemp);
+                toTrack.putExtra("lonDes", lonTemp);
+                startActivity(toTrack);
+                finish();
+            }
+        });
     }
+
+
 
     private void GetDataFromFirebase(String categoryId) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -98,19 +119,16 @@ public class ViewImageActivity extends Activity {
                     image.setmImage(dataSnapshot.child("mImage").getValue().toString());
                     image.setmName(dataSnapshot.child("mName").getValue().toString());
                     image.setmAddress(dataSnapshot.child("mAddress").getValue().toString());
+                    image.setLat(dataSnapshot.child("lat").getValue().toString());
+                    image.setLon(dataSnapshot.child("lon").getValue().toString());
+
                     imagesList.add(image);
                 }
                 imageAdapter = new ImageAdapter(imagesList, getApplicationContext());
                 viewPager2.setAdapter(imageAdapter);
                 imageAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.VISIBLE);
-                viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                    @Override
-                    public void onPageSelected(int position) {
-                        super.onPageSelected(position);
-                        pos = position;
-                    }
-                });
+
             }
 
             @Override

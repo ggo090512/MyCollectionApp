@@ -133,8 +133,8 @@ public class CreateActivity extends AppCompatActivity {
 
                 try {
                     List<Address> cord = geocoder.getFromLocationName(address.getText().toString(), 1);
-                    double latitude= cord.get(0).getLatitude();
-                    double longitude= cord.get(0).getLongitude();
+                    String latitude= String.valueOf(cord.get(0).getLatitude());
+                    String longitude= String.valueOf(cord.get(0).getLongitude());
                     uploadTask.addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {

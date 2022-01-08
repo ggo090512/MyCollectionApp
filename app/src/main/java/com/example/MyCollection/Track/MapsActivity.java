@@ -4,7 +4,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,8 +33,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Polyline currentPollyline;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
+        super.onCreate(savedInstanceState);
+        Intent getDes = getIntent();
+        Double latDes = Double.parseDouble(getDes.getStringExtra("latDes"));
+        Double lonDes = Double.parseDouble(getDes.getStringExtra("lonDes"));
+        Log.e("check Cord", ""+latDes+" "+ latDes);
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getDirection = findViewById(R.id.btnGetDirection);
@@ -54,7 +60,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double gpslatitude = gps.getLatitude();
             double gpslongitude = gps.getLongitude();
             LatLng gpsLocation = new LatLng(gpslatitude, gpslongitude);
-            LatLng desAdress = new LatLng(10.7781, 106.6801);
+            LatLng desAdress = new LatLng(latDes, lonDes);
             markerOptions1 = new MarkerOptions();
             markerOptions2 = new MarkerOptions();
             markerOptions1.position(gpsLocation);
@@ -122,6 +128,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //            );
         if (currentPollyline != null)
             currentPollyline.remove();
-        currentPollyline = mMap.addPolyline((PolylineOptions) values[0]);
+        currentPollyline = mMap.addPolyline((PolylineOptions)values[0]);
     }
 }

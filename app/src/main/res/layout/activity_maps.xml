@@ -18,9 +18,9 @@
         android:id="@+id/btnGetDirection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="650dp"
+
         android:text="Direction"
-        android:layout_marginLeft="280dp">
+        >
 
     </Button>
 </FrameLayout>
