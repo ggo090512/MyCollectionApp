@@ -8,16 +8,40 @@ public class ImageItem {
     private String mAddress;
     private String mEmail;
     private String mImage;
+    private Double lat;
+    private Double lon;
+
+    public Double getLon() {
+        return lon;
+    }
+
+    public void setLon(Double lon) {
+        this.lon = lon;
+    }
+
+    public ImageItem(Double lat, Double lon) {
+        this.lat = lat;
+        this.lon = lon;
+    }
 
     public ImageItem(){}
 
-
-    public ImageItem(String mCate, String mName, String mAddress, String mEmail, String mImage) {
+    public ImageItem(String mCate, String mName, String mAddress, String mEmail, String mImage, Double lat, Double lon) {
         this.mCate = mCate;
         this.mName = mName;
         this.mAddress = mAddress;
         this.mEmail = mEmail;
         this.mImage = mImage;
+        this.lat = lat;
+        this.lon = lon;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
     }
 
     public String getmCate() {

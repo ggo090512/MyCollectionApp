@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "2942960344",
+    "project_id": "collection-c63db",
+    "storage_bucket": "collection-c63db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2942960344:android:e665db10d29076e24c8dad",
+        "android_client_info": {
+          "package_name": "com.codeacademy.displaytracking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "2942960344-8nocbagjq49m8f3igv21bgko5keqlc84.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi_Y3JwTG5hv39X0D2fRxLn65ghuuLndM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "2942960344-8nocbagjq49m8f3igv21bgko5keqlc84.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

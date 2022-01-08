@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -127,34 +129,43 @@ public class CreateActivity extends AppCompatActivity {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                 byte[] data = baos.toByteArray();
                 UploadTask uploadTask = mountainsRef.putBytes(data);
+                Geocoder geocoder = new Geocoder(CreateActivity.this);
 
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        Toast.makeText(CreateActivity.this, "Fail", Toast.LENGTH_LONG).show();
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                String img = uri.toString();
-                                categoryId = HomeActivity.categorID;
-                                ImageItem image = new ImageItem(categoryId,name.getText().toString().trim(),address.getText().toString().trim(),user.getEmail(),img);
-                                String imageId = databaseRef.push().getKey();
-                                databaseRef.child(imageId).setValue(image);
-                                Toast.makeText(CreateActivity.this, "Success", Toast.LENGTH_LONG).show();
-                                bottomSheetDialog.dismiss();
-                                Intent toCreate = new Intent(context, ViewImageActivity.class);
-                                startActivity(toCreate);
-                                context.finish();
-                            }
-                        });
-                    }
-                });
+                try {
+                    List<Address> cord = geocoder.getFromLocationName(address.getText().toString(), 1);
+                    double latitude= cord.get(0).getLatitude();
+                    double longitude= cord.get(0).getLongitude();
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                            Toast.makeText(CreateActivity.this, "Fail", Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                            result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    String img = uri.toString();
+                                    categoryId = HomeActivity.categorID;
+                                    ImageItem image = new ImageItem(categoryId,name.getText().toString().trim(),address.getText().toString().trim(),user.getEmail(),img,latitude,longitude);
+                                    String imageId = databaseRef.push().getKey();
+                                    databaseRef.child(imageId).setValue(image);
+                                    Toast.makeText(CreateActivity.this, "Success", Toast.LENGTH_LONG).show();
+                                    bottomSheetDialog.dismiss();
+                                    Intent toCreate = new Intent(context, ViewImageActivity.class);
+                                    startActivity(toCreate);
+                                    context.finish();
+                                }
+                            });
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
         bottomSheetDialog.setContentView(bottomSheetView);
