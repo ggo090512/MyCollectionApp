@@ -33,9 +33,9 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="left"
                             android:layout_marginTop="20dp"
-                            android:text="Trải nghiệm ẩm thực"
+                            android:text="Bộ sưu tập của riêng bạn"
                             android:textColor="@color/whiteTextColor"
-                            android:textSize="20dp"
+                            android:textSize="18dp"
                             android:textStyle="bold" />
 
                         <ImageView
@@ -45,35 +45,6 @@
                             android:src="@drawable/icons8_hamburger_100" />
                 </FrameLayout>
         </LinearLayout>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_search"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:padding="10dp"
-
-            app:cardCornerRadius="12dp">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                        <ImageView
-                            android:layout_marginLeft="10dp"
-                            android:id="@+id/seach_icon"
-                            android:layout_width="25dp"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/search"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        </androidx.cardview.widget.CardView>
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_menu"

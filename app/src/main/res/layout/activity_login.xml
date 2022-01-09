@@ -106,6 +106,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:password="true"
                 android:text="123456"
                 tools:ignore="MissingConstraints"
                 tools:layout_editor_absoluteX="-2dp"
