@@ -31,13 +31,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private MarkerOptions markerOptions1,markerOptions2;
     Button getDirection;
     private Polyline currentPollyline;
+    Double latDes,lonDes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         Intent getDes = getIntent();
-        Double latDes = Double.parseDouble(getDes.getStringExtra("latDes"));
-        Double lonDes = Double.parseDouble(getDes.getStringExtra("lonDes"));
+        latDes = Double.parseDouble(getDes.getStringExtra("latDes"));
+        lonDes = Double.parseDouble(getDes.getStringExtra("lonDes"));
         Log.e("check Cord", ""+latDes+" "+ latDes);
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -89,9 +91,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
         googleMap.addMarker(markerOptions1);
         googleMap.addMarker(markerOptions2);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(10.7781, 106.6801), 14));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latDes,lonDes), 14));
     }
     private String getUrl(LatLng origin, LatLng dest, String directionMode) {
         // Origin of route
@@ -112,11 +115,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     @Override
     public void onTaskDone(Object... values) {
-//        PolylineOptions polylineOptions = new PolylineOptions();
-//        polylineOptions.color(Color.RED);
-//        polylineOptions.geodesic(true);
-//        polylineOptions.width(5);
-//        polylineOptions.clickable(true);
+        PolylineOptions polylineOptions1 = new PolylineOptions();
+        polylineOptions1.color(Color.RED);
+        polylineOptions1.geodesic(true);
+        polylineOptions1.width(5);
+        polylineOptions1.clickable(true);
 
 //            Polyline polyline1 = mMap.addPolyline(new PolylineOptions()
 //                    .clickable(true)
