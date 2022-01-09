@@ -43,11 +43,11 @@ public class placeEditText extends AppCompatActivity {
             public void onPlaceSelected(@NonNull Place place) {
 
                 destination.setPlaceAddress(place.getAddress());
-                destination.setPlaceAddress(place.getLatLng().toString());
+                destination.setLatLng(place.getLatLng().toString());
                 Log.i("wtf", "Place: " + destination.getPlaceAddress() + "Latlng: " + destination.getPlaceAddress()
                 );
                 Intent toCreate = new Intent(placeEditText.this, CreateActivity.class);
-                toCreate.putExtra("adress",destination.getPlaceAddress());
+                toCreate.putExtra("nameAd",destination.getPlaceAddress());
                 toCreate.putExtra("latlng",destination.getLatLng());
                 startActivity(toCreate);
                 finish();

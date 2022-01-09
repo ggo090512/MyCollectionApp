@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,7 +29,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.MyCollection.Models.ImageItem;
+import com.example.MyCollection.Track.placeEditText;
 import com.example.foodnews.R;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -58,9 +61,9 @@ public class CreateActivity extends AppCompatActivity {
     final StorageReference storageRef = storage.getReferenceFromUrl("gs://foodnews-ea4e2.appspot.com");
     ArrayAdapter<String> arrayAdapter;
 
-
+    Button address;
     int REQUEST_CODE_CAMERA = 100;
-    EditText email, name, address;
+    EditText email, name;
     ImageView image;
     ImageButton btnCam, btnShow;
     Spinner cataloge;
@@ -109,7 +112,13 @@ public class CreateActivity extends AppCompatActivity {
 
         name = bottomSheetView.findViewById(R.id.edit_name);
         address = bottomSheetView.findViewById(R.id.edit_address);
-        list = new ArrayList<>();
+        address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent toPlace = new Intent(CreateActivity.this, placeEditText.class);
+                startActivity(toPlace);
+            }
+        });
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String strEmail = user.getEmail();
@@ -120,7 +129,18 @@ public class CreateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 databaseRef = FirebaseDatabase.getInstance().getReference("Images");
                 Calendar calendar = Calendar.getInstance();
-
+                Intent getAd = getIntent();
+                String latlng = getAd.getStringExtra("latlng");
+                String nameAdress = getAd.getStringExtra("nameAd");
+                Log.e("tao lat", "Show: "+ latlng);
+                Log.e("tao ad", "Show: "+ nameAdress);
+                list = new ArrayList<>();
+                latlng = latlng.replace("(","");
+                latlng = latlng.replace(")","");
+                String[] temp = latlng.split(",");
+                String temp2 = temp[0].replace("lat/lng: ","");
+                String lat = temp2.trim();
+                String lon = temp[1];
                 StorageReference mountainsRef = storageRef.child("image" + calendar.getTimeInMillis()+".png");
                 image.setDrawingCacheEnabled(true);
                 image.buildDrawingCache();
@@ -129,12 +149,7 @@ public class CreateActivity extends AppCompatActivity {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                 byte[] data = baos.toByteArray();
                 UploadTask uploadTask = mountainsRef.putBytes(data);
-                Geocoder geocoder = new Geocoder(CreateActivity.this);
-
                 try {
-                    List<Address> cord = geocoder.getFromLocationName(address.getText().toString(), 1);
-                    String latitude= String.valueOf(cord.get(0).getLatitude());
-                    String longitude= String.valueOf(cord.get(0).getLongitude());
                     uploadTask.addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
@@ -150,7 +165,7 @@ public class CreateActivity extends AppCompatActivity {
                                 public void onSuccess(Uri uri) {
                                     String img = uri.toString();
                                     categoryId = HomeActivity.categorID;
-                                    ImageItem image = new ImageItem(categoryId,name.getText().toString().trim(),address.getText().toString().trim(),user.getEmail(),img,latitude,longitude);
+                                    ImageItem image = new ImageItem(categoryId,name.getText().toString().trim(),nameAdress.trim(),user.getEmail(),img,lat,lon);
                                     String imageId = databaseRef.push().getKey();
                                     databaseRef.child(imageId).setValue(image);
                                     Toast.makeText(CreateActivity.this, "Success", Toast.LENGTH_LONG).show();
@@ -162,7 +177,7 @@ public class CreateActivity extends AppCompatActivity {
                             });
                         }
                     });
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
