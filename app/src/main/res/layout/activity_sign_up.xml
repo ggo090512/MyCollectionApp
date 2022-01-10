@@ -47,7 +47,6 @@
             android:layout_margin="5dp"
             android:id="@+id/txtRegEmail"
             app:counterEnabled="true"
-            app:counterMaxLength="20"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:hint="Email"

@@ -66,7 +66,6 @@ public class CreateActivity extends AppCompatActivity {
     EditText email, name;
     ImageView image;
     ImageButton btnCam, btnShow;
-    Spinner cataloge;
     BottomSheetDialog bottomSheetDialog;
 
     List<String> list;
@@ -80,20 +79,12 @@ public class CreateActivity extends AppCompatActivity {
         //camOpen();
         requestPermission();
 
-
-
         if (ContextCompat.checkSelfPermission(CreateActivity.this,
                 Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(CreateActivity.this,
                     new String[]{Manifest.permission.CAMERA}, 101);
         }
-        //Nút camera
-        btnCam.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestPermission();
-            }
-        });
+
 
     }
 
@@ -111,6 +102,7 @@ public class CreateActivity extends AppCompatActivity {
                 );
 
         name = bottomSheetView.findViewById(R.id.edit_name);
+        btnCam = bottomSheetView.findViewById(R.id.btnCam);
 //        address = bottomSheetView.findViewById(R.id.edit_address);
 //        address.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -120,6 +112,14 @@ public class CreateActivity extends AppCompatActivity {
 //            }
 //
 //        });
+
+        //Nút camera
+        btnCam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestPermission();
+            }
+        });
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String strEmail = user.getEmail();
@@ -198,7 +198,7 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     private void UIinit(){
-        btnCam = findViewById(R.id.btnCam);
+//        btnCam = findViewById(R.id.btnCam);
 //        btnShow = findViewById(R.id.btnCreate);
         image = findViewById(R.id.imageViewCreate);
     }
