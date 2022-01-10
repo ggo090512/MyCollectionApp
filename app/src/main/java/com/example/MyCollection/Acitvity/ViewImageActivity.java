@@ -15,6 +15,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.MyCollection.Models.ImageItem;
 import com.example.MyCollection.Track.MapsActivity;
+import com.example.MyCollection.Track.placeEditText;
 import com.example.foodnews.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -70,7 +71,7 @@ public class ViewImageActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                Intent itemIntent = new Intent(ViewImageActivity.this, CreateActivity.class);
+                Intent itemIntent = new Intent(ViewImageActivity.this, placeEditText.class);
 //                itemIntent.putExtra("CategoryId", categoryId);
                 startActivity(itemIntent);
                 Activity context = ViewImageActivity.this;

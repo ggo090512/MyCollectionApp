@@ -35,14 +35,14 @@
             android:layout_height="wrap_content"
             android:hint="Food Name"
             android:padding="15dp"/>
-        <Button
-            android:id="@+id/edit_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Colored"
+<!--        <Button-->
+<!--            android:id="@+id/edit_address"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            style="@style/Widget.AppCompat.Button.Colored"-->
 
-            android:hint="Address"
-            android:padding="15dp"/>
+<!--            android:hint="Address"-->
+<!--            android:padding="15dp"/>-->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

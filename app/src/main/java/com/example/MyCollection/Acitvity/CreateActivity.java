@@ -111,14 +111,15 @@ public class CreateActivity extends AppCompatActivity {
                 );
 
         name = bottomSheetView.findViewById(R.id.edit_name);
-        address = bottomSheetView.findViewById(R.id.edit_address);
-        address.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent toPlace = new Intent(CreateActivity.this, placeEditText.class);
-                startActivity(toPlace);
-            }
-        });
+//        address = bottomSheetView.findViewById(R.id.edit_address);
+//        address.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent toPlace = new Intent(CreateActivity.this, placeEditText.class);
+//                startActivity(toPlace);
+//            }
+//
+//        });
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String strEmail = user.getEmail();
@@ -180,22 +181,10 @@ public class CreateActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         });
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
-    }
-
-    //
-    private void camOpen() {
-        if (ContextCompat.checkSelfPermission(CreateActivity.this,
-                Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(CreateActivity.this,
-                    new String[]{Manifest.permission.CAMERA}, 101);
-        }
-        Intent open_cam = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(open_cam, REQUEST_CODE_CAMERA);
     }
 
     //Lấy data hình tới img view
