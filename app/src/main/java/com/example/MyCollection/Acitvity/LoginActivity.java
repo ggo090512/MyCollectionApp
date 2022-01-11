@@ -48,38 +48,40 @@ public class LoginActivity extends AppCompatActivity {
         txtEmail = findViewById(R.id.txtLoginEmail);
         txtPassword = findViewById(R.id.txtLoginPassword);
 
-        fAuth = FirebaseAuth.getInstance();
+        fAuth = FirebaseAuth.getInstance();                                                 // Kết nối với Firebase Authentication - CSDL đăng nhập đăng ký của google
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = txtEmail.getEditText().getText().toString().trim();
-                String password = txtPassword.getEditText().getText().toString().trim();
-                if (TextUtils.isEmpty(email)) {
+                String email = txtEmail.getEditText().getText().toString().trim();          // Lấy Email từ giao diện đăng nhập
+                String password = txtPassword.getEditText().getText().toString().trim();    // Lấy Mật khẩu từ giao diện đăng nhập
+                if (TextUtils.isEmpty(email)) {                                             // Check để trống Email
                     txtEmail.setError("Email is empty");
                     return;
                 }
-                if (TextUtils.isEmpty(password)) {
+                if (TextUtils.isEmpty(password)) {                                          // Check để trống mật khẩu
                     txtPassword.setError("Password is empty");
                     return;
                 }
-                if (password.length() < 6) {
+                if (password.length() < 6) {                                                // Check Pass phải trên 6 ký tự
                     txtPassword.setError("Must more than 6 letters");
                     return;
                 }
+
+                // Sử dụng Firebase Authentication để đăng ký và đăng nhập
                 fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = fAuth.getCurrentUser();
+                    public void onComplete(@NonNull Task<AuthResult> task) {               // Xử lý nếu đăng nhập thành công ( task gọi là tác vụ - nếu tác vụ ok thì làm )
+                        if (task.isSuccessful()) {                                          // trường hợp OK:
+                            FirebaseUser user = fAuth.getCurrentUser();                    // Lấy tài khoản vừa đăng nhập
 
-                            Intent loginIntent = new Intent(LoginActivity.this, HomeActivity.class);
-                            loginIntent.putExtra("LoginId", user.getEmail());
+                            Intent loginIntent = new Intent(LoginActivity.this, HomeActivity.class);    // Tạo Intent chuyển tới trang chủ là Home
+                            loginIntent.putExtra("LoginId", user.getEmail());                                   // Gửi kèm theo Email của người vừa đăng nhập
                             startActivity(loginIntent);
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",        // trường hợp đăng nhập thất bại thì báo lỗi
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
