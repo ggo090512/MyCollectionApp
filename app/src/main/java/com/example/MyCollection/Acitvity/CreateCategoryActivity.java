@@ -2,16 +2,22 @@ package com.example.MyCollection.Acitvity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -59,6 +65,11 @@ public class CreateCategoryActivity extends AppCompatActivity {
     List<String> list;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
+
+    NotificationCompat.Builder builder;
+    NotificationManagerCompat notificationManager;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +78,12 @@ public class CreateCategoryActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         camOpen();
         Show();
+
+        builder = new NotificationCompat.Builder(this,"0007");
+        notificationManager = NotificationManagerCompat.from(CreateCategoryActivity.this);
+        NotificationChannel channel = new NotificationChannel("0007","NOTIFICATION", NotificationManager.IMPORTANCE_DEFAULT);
+        notificationManager.createNotificationChannel(channel);
+
 
         btnCategory = findViewById(R.id.btnCreateCategory);
         imageView = findViewById(R.id.imageViewCreateCata);
@@ -118,6 +135,11 @@ public class CreateCategoryActivity extends AppCompatActivity {
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                        builder.setSmallIcon(R.drawable.icons8_hamburger_100);
+                        builder.setStyle(new NotificationCompat.BigTextStyle().bigText("Success!! Tải lên thành công"));
+                        notificationManager.notify(0071,builder.build());
+
                         Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
                         result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
@@ -129,6 +151,7 @@ public class CreateCategoryActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                                         if(error == null){
+
                                             Toast.makeText(getApplicationContext(),stringNoitce.SUCCESS,Toast.LENGTH_LONG).show();
                                         }else {
                                             Toast.makeText(getApplicationContext(),stringNoitce.ERROR,Toast.LENGTH_LONG).show();

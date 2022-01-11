@@ -2,6 +2,8 @@ package com.example.MyCollection.Acitvity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -9,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -24,8 +27,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.MyCollection.Models.ImageItem;
@@ -70,14 +76,23 @@ public class CreateActivity extends AppCompatActivity {
 
     List<String> list;
     String categoryId;
+
+    NotificationCompat.Builder builder;
+    NotificationManagerCompat notificationManager;
+    @RequiresApi(api = Build.VERSION_CODES.O)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_main);
 
         UIinit();
-        //camOpen();
         requestPermission();
+
+        builder = new NotificationCompat.Builder(this,"7400");
+        notificationManager = NotificationManagerCompat.from(CreateActivity.this);
+        NotificationChannel channel = new NotificationChannel("7400","NOTIFICATION", NotificationManager.IMPORTANCE_DEFAULT);
+        notificationManager.createNotificationChannel(channel);
 
         if (ContextCompat.checkSelfPermission(CreateActivity.this,
                 Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
@@ -89,7 +104,6 @@ public class CreateActivity extends AppCompatActivity {
     }
 
 
-    //Phương thức show bottom sheet
     private void Show(){
         Activity context = CreateActivity.this;
         bottomSheetDialog = new BottomSheetDialog(
@@ -103,15 +117,6 @@ public class CreateActivity extends AppCompatActivity {
 
         name = bottomSheetView.findViewById(R.id.edit_name);
         btnCam = bottomSheetView.findViewById(R.id.btnCam);
-//        address = bottomSheetView.findViewById(R.id.edit_address);
-//        address.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent toPlace = new Intent(CreateActivity.this, placeEditText.class);
-//                startActivity(toPlace);
-//            }
-//
-//        });
 
         //Nút camera
         btnCam.setOnClickListener(new View.OnClickListener() {
@@ -169,6 +174,8 @@ public class CreateActivity extends AppCompatActivity {
                                     ImageItem image = new ImageItem(categoryId,name.getText().toString().trim(),nameAdress.trim(),user.getEmail(),img,lat,lon);
                                     String imageId = databaseRef.push().getKey();
                                     databaseRef.child(imageId).setValue(image);
+                                    builder.setStyle(new NotificationCompat.BigTextStyle().bigText("Success!! Tải lên thành công"));
+                                    notificationManager.notify(7401,builder.build());
                                     Toast.makeText(CreateActivity.this, "Success", Toast.LENGTH_LONG).show();
                                     bottomSheetDialog.dismiss();
                                     Intent toCreate = new Intent(context, ViewImageActivity.class);

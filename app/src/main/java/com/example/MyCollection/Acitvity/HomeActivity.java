@@ -1,10 +1,13 @@
 package com.example.MyCollection.Acitvity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -14,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,6 +27,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -99,6 +105,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     ImageView imageUpdate;
     public static String categorID;
 
+    NotificationCompat.Builder builder;
+    NotificationManagerCompat notificationManager;
+
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -110,11 +119,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     };
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
+        builder = new NotificationCompat.Builder(this,"0007");
+        notificationManager = NotificationManagerCompat.from(HomeActivity.this);
+        NotificationChannel channel = new NotificationChannel("0008","NOTIFICATION", NotificationManager.IMPORTANCE_DEFAULT);
+        notificationManager.createNotificationChannel(channel);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View hView = navigationView.getHeaderView(0);
@@ -251,9 +265,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
+
         if(item.getTitle().equals(Container.UPDATE)){
+
+
             showDialogUpdate( adapter.getRef(item.getOrder()).getKey(), adapter.getItem(item.getOrder()));
         }else if(item.getTitle().equals(Container.DELETE)){
+
+            builder.setSmallIcon(R.drawable.icons8_hamburger_100);
+            builder.setStyle(new NotificationCompat.BigTextStyle().bigText("Success!! Xóa thành công"));
+            notificationManager.notify(0062,builder.build());
+
             deleteCategory( adapter.getRef(item.getOrder()).getKey());
         }
         return super.onContextItemSelected(item);
@@ -290,6 +312,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         fUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                builder.setSmallIcon(R.drawable.icons8_hamburger_100);
+                builder.setStyle(new NotificationCompat.BigTextStyle().bigText("Success!! Đã tải ảnh"));
+                notificationManager.notify(0064,builder.build());
+
                 updateCategory(cate);
             }
         });
@@ -300,6 +326,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         dialog.setPositiveButton("YES" , new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                builder.setSmallIcon(R.drawable.icons8_hamburger_100);
+                builder.setStyle(new NotificationCompat.BigTextStyle().bigText("Success!! Cập nhập thành công"));
+                notificationManager.notify(0061,builder.build());
+
 
                 cate.setGmail(cate.getGmail());
                 cate.setName(String.valueOf(edtName.getText()));
