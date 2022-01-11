@@ -10,8 +10,10 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -102,6 +104,12 @@ public class CreateCategoryActivity extends AppCompatActivity {
     }
 
     private void Show(){
+        ProgressDialog dialogUpload = new ProgressDialog(this);
+        dialogUpload.setMessage("Uploading...");
+        dialogUpload.show();
+
+        Activity context = CreateCategoryActivity.this;
+
         bottomSheetDialog = new BottomSheetDialog(
                 CreateCategoryActivity.this, R.style.BottomSheetDialogTheme
         );
@@ -144,6 +152,9 @@ public class CreateCategoryActivity extends AppCompatActivity {
                         result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
+                                double process = ( 100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                                dialogUpload.setMessage("Uploaded"+process+"%");
+
                                 String photoStringLink = uri.toString();
                                 fAuth = FirebaseAuth.getInstance();
                                 FirebaseUser user = fAuth.getCurrentUser();
@@ -151,8 +162,11 @@ public class CreateCategoryActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                                         if(error == null){
-
+                                            dialogUpload.dismiss();
                                             Toast.makeText(getApplicationContext(),stringNoitce.SUCCESS,Toast.LENGTH_LONG).show();
+                                            Intent toCreate = new Intent(context, HomeActivity.class);
+                                            startActivity(toCreate);
+                                            context.finish();
                                         }else {
                                             Toast.makeText(getApplicationContext(),stringNoitce.ERROR,Toast.LENGTH_LONG).show();
                                         }

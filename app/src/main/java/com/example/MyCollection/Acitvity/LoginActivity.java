@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView LogoName,slogan_name;
     TextInputLayout txtEmail,txtPassword;
     FirebaseAuth fAuth;
-
+    static String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,8 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser user = fAuth.getCurrentUser();                    // Lấy tài khoản vừa đăng nhập
 
                             Intent loginIntent = new Intent(LoginActivity.this, HomeActivity.class);    // Tạo Intent chuyển tới trang chủ là Home
-                            loginIntent.putExtra("LoginId", user.getEmail());                                   // Gửi kèm theo Email của người vừa đăng nhập
+                            //loginIntent.putExtra("LoginId", user.getEmail());                                   // Gửi kèm theo Email của người vừa đăng nhập
+                            userID = user.getEmail();
                             startActivity(loginIntent);
 
                         } else {

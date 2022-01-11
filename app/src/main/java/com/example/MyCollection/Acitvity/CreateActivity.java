@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -44,6 +45,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.core.Context;
@@ -105,6 +107,11 @@ public class CreateActivity extends AppCompatActivity {
 
 
     private void Show(){
+
+        ProgressDialog dialogUpload = new ProgressDialog(this);
+        dialogUpload.setMessage("Uploading...");
+        dialogUpload.show();
+
         Activity context = CreateActivity.this;
         bottomSheetDialog = new BottomSheetDialog(
                 CreateActivity.this, R.style.BottomSheetDialogTheme
@@ -127,7 +134,6 @@ public class CreateActivity extends AppCompatActivity {
         });
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String strEmail = user.getEmail();
 
         //Nút save
         bottomSheetView.findViewById(R.id.btnSave).setOnClickListener(new View.OnClickListener() {
@@ -165,22 +171,33 @@ public class CreateActivity extends AppCompatActivity {
                     }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
                             Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
                             result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
+                                    builder.setSmallIcon(R.drawable.icons8_hamburger_100);
+                                    double process = ( 100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                                    dialogUpload.setMessage("Uploaded"+process+"%");
+
                                     String img = uri.toString();
                                     categoryId = HomeActivity.categorID;
                                     ImageItem image = new ImageItem(categoryId,name.getText().toString().trim(),nameAdress.trim(),user.getEmail(),img,lat,lon);
                                     String imageId = databaseRef.push().getKey();
-                                    databaseRef.child(imageId).setValue(image);
-                                    builder.setStyle(new NotificationCompat.BigTextStyle().bigText("Success!! Tải lên thành công"));
-                                    notificationManager.notify(7401,builder.build());
-                                    Toast.makeText(CreateActivity.this, "Success", Toast.LENGTH_LONG).show();
-                                    bottomSheetDialog.dismiss();
-                                    Intent toCreate = new Intent(context, ViewImageActivity.class);
-                                    startActivity(toCreate);
-                                    context.finish();
+                                    databaseRef.child(imageId).setValue(image, new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                            dialogUpload.dismiss();
+                                            builder.setStyle(new NotificationCompat.BigTextStyle().bigText("Success!! Tải lên thành công"));
+                                            notificationManager.notify(7401,builder.build());
+                                            Toast.makeText(CreateActivity.this, "Success", Toast.LENGTH_LONG).show();
+                                            bottomSheetDialog.dismiss();
+                                            Intent toCreate = new Intent(context, ViewImageActivity.class);
+                                            startActivity(toCreate);
+                                            context.finish();
+                                        }
+                                    });
+
                                 }
                             });
                         }

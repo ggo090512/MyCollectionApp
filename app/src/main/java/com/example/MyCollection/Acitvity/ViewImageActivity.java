@@ -37,10 +37,9 @@ public class ViewImageActivity extends Activity {
     private ImageAdapter imageAdapter;
     private ArrayList<ImageItem> imagesList;
     private ImageView imageView;
-    ImageView imagepicker;
     private ProgressBar progressBar;
     private List<ImageItem> pagerMList = new ArrayList<>();
-    String categoryId = "";
+    static String categoryId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,23 +55,16 @@ public class ViewImageActivity extends Activity {
         dbRef = FirebaseDatabase.getInstance().getReference();
         imagesList = new ArrayList<>();
         clearAll();
-        //GetDataFromFirebase();
 
+        categoryId = HomeActivity.categorID;
+        GetDataFromFirebase(categoryId);
 
-        if (getIntent() != null) {
-            categoryId = HomeActivity.categorID;
-            Log.d("view", categoryId + "");
-            if (categoryId != null) {
-                GetDataFromFirebase(categoryId);
-            }
-        }
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent itemIntent = new Intent(ViewImageActivity.this, placeEditText.class);
-//                itemIntent.putExtra("CategoryId", categoryId);
                 startActivity(itemIntent);
                 Activity context = ViewImageActivity.this;
                 context.finish();

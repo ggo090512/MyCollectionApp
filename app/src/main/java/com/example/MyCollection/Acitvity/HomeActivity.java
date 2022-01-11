@@ -97,7 +97,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public static FButton fUpdate, fSelete,btnTest;
     public static MaterialEditText edtName;
 
-    String loginId = "";
+    static String loginId;
 
     FloatingActionButton fab;
     TextView nameUser;
@@ -162,12 +162,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(onClickListener);
+        loginId = LoginActivity.userID;
+        LoadMenu(loginId);
 
-        if (getIntent() != null)
-            loginId = getIntent().getStringExtra("LoginId");
-        if (!loginId.isEmpty() && loginId != null){
-            LoadMenu(loginId);
-        }
         loadMenu2();
     }
 
